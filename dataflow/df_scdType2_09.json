@@ -1,0 +1,175 @@
+{
+	"name": "df_scdType2_09",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "ds_sourcesql_09",
+						"type": "DatasetReference"
+					},
+					"name": "srcsql1"
+				},
+				{
+					"dataset": {
+						"referenceName": "ds_DimCustomer_Target_09",
+						"type": "DatasetReference"
+					},
+					"name": "srcDimCustomerTarget"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "ds_DimCustomer_Target_09",
+						"type": "DatasetReference"
+					},
+					"name": "sink1Update"
+				},
+				{
+					"dataset": {
+						"referenceName": "ds_DimCustomer_Target_09",
+						"type": "DatasetReference"
+					},
+					"name": "sink2Insert"
+				}
+			],
+			"transformations": [
+				{
+					"name": "srcSelectColumnsRename"
+				},
+				{
+					"name": "join1"
+				},
+				{
+					"name": "InsertForNewandHistory"
+				},
+				{
+					"name": "derivedColumnsForInsertandHistory"
+				},
+				{
+					"name": "select1"
+				},
+				{
+					"name": "Update"
+				},
+				{
+					"name": "derivedColumn1"
+				},
+				{
+					"name": "alterRow1"
+				},
+				{
+					"name": "alterRow2"
+				},
+				{
+					"name": "select2"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          EMPNO as integer,",
+				"          NAME as string,",
+				"          DESG as string,",
+				"          SALARY as integer",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> srcsql1",
+				"source(output(",
+				"          ESK as integer,",
+				"          EMPNO as integer,",
+				"          NAME as string,",
+				"          DESG as string,",
+				"          SAL as integer,",
+				"          STARTDATE as timestamp,",
+				"          ENDDATE as timestamp,",
+				"          ISACTIVE as integer",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     query: 'select * from dimemp WHERE isnull(ISACTIVE,0)=1',",
+				"     format: 'query') ~> srcDimCustomerTarget",
+				"srcsql1 select(mapColumn(",
+				"          src_EmpNo = EMPNO,",
+				"          src_Name = NAME,",
+				"          src_Desg = DESG,",
+				"          src_Salary = SALARY",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> srcSelectColumnsRename",
+				"srcSelectColumnsRename, srcDimCustomerTarget join(src_EmpNo == EMPNO,",
+				"     joinType:'left',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> join1",
+				"join1 filter(isNull(EMPNO) || (src_Name!=NAME)|| (src_Desg!=DESG) ||  (src_Salary!=SAL)) ~> InsertForNewandHistory",
+				"InsertForNewandHistory derive(srcENDDATE = toDate('31-12-9999', 'dd-MM-yyyy', 'en'),",
+				"          srcISACTIVE = 1) ~> derivedColumnsForInsertandHistory",
+				"derivedColumnsForInsertandHistory select(mapColumn(",
+				"          trgEMPNO = src_EmpNo,",
+				"          trgNAME = src_Name,",
+				"          trgDESG = src_Desg,",
+				"          trgSAL = src_Salary,",
+				"          trgENDDATE = srcENDDATE,",
+				"          trgISACTIVE = srcISACTIVE",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select1",
+				"join1 filter(!isNull(EMPNO) && (src_Name!=NAME || src_Desg!=DESG || src_Salary!=SAL)) ~> Update",
+				"Update derive(trgISACTIVE = 0,",
+				"          trgENDDATE = currentTimestamp()) ~> derivedColumn1",
+				"select2 alterRow(updateIf(true())) ~> alterRow1",
+				"select1 alterRow(insertIf(true())) ~> alterRow2",
+				"derivedColumn1 select(mapColumn(",
+				"          trgEMPNO = src_EmpNo,",
+				"          trgNAME = src_Name,",
+				"          trgDESG = src_Desg,",
+				"          trgSAL = src_Salary,",
+				"          trgENDDATE,",
+				"          trgISACTIVE",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select2",
+				"alterRow1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     deletable:false,",
+				"     insertable:false,",
+				"     updateable:true,",
+				"     upsertable:false,",
+				"     keys:['EMPNO'],",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     mapColumn(",
+				"          EMPNO = trgEMPNO,",
+				"          NAME = trgNAME,",
+				"          DESG = trgDESG,",
+				"          SAL = trgSAL,",
+				"          ENDDATE = trgENDDATE,",
+				"          ISACTIVE = trgISACTIVE",
+				"     )) ~> sink1Update",
+				"alterRow2 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     mapColumn(",
+				"          EMPNO = trgEMPNO,",
+				"          NAME = trgNAME,",
+				"          DESG = trgDESG,",
+				"          SAL = trgSAL,",
+				"          ENDDATE = trgENDDATE,",
+				"          ISACTIVE = trgISACTIVE",
+				"     )) ~> sink2Insert"
+			]
+		}
+	}
+}

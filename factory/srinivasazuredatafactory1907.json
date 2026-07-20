@@ -1,0 +1,15 @@
+{
+	"name": "srinivasazuredatafactory1907",
+	"properties": {
+		"trustModeClaimForMi": {
+			"value": "Disabled",
+			"editable": true
+		}
+	},
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "9395f919-d751-4fa8-b077-6be2007a766e",
+		"tenantId": "b8a2f596-7065-4946-b671-dfc8135ff465"
+	}
+}
