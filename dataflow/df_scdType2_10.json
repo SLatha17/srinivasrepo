@@ -19,7 +19,22 @@
 					"name": "trgsqltable10"
 				}
 			],
-			"sinks": [],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "ds_DimCustomer_Target_09",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				},
+				{
+					"dataset": {
+						"referenceName": "ds_DimCustomer_Target_09",
+						"type": "DatasetReference"
+					},
+					"name": "sink2"
+				}
+			],
 			"transformations": [
 				{
 					"name": "select1src"
@@ -38,6 +53,21 @@
 				},
 				{
 					"name": "derivedColumn1"
+				},
+				{
+					"name": "alterRow1"
+				},
+				{
+					"name": "select1"
+				},
+				{
+					"name": "derivedColumn2"
+				},
+				{
+					"name": "select2"
+				},
+				{
+					"name": "alterRow2"
 				}
 			],
 			"scriptLines": [
@@ -93,7 +123,68 @@
 				"Joinsrctrg10 filter(isNull(trgEMPNO) || (srcNAME!=trgNAME || srcDESG!=trgDESG || srcSALARY!=trgSAL)) ~> filter2updatewithinsert",
 				"Joinsrctrg10 filter((srcEMPNO==trgEMPNO) && (srcNAME!=trgNAME || srcDESG!=trgDESG || srcSALARY!=trgSAL)) ~> filter1UpdateHistory",
 				"filter1UpdateHistory derive(trgISACTIVE = 0,",
-				"          trgENDDATE = toDate('31-12-9999', 'dd-MM-yyyy', 'en')) ~> derivedColumn1"
+				"          trgENDDATE = currentTimestamp()) ~> derivedColumn1",
+				"select1 alterRow(updateIf(true())) ~> alterRow1",
+				"derivedColumn1 select(mapColumn(",
+				"          trgEMPNO,",
+				"          trgNAME,",
+				"          trgDESG,",
+				"          trgSAL,",
+				"          trgSTARTDATE,",
+				"          trgENDDATE,",
+				"          trgISACTIVE",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select1",
+				"filter2updatewithinsert derive(trgISACTIVE = 1,",
+				"          trgENDDATE = toDate('31-12-9999', 'dd-MM-yyyy', 'en')) ~> derivedColumn2",
+				"derivedColumn2 select(mapColumn(",
+				"          finalEMPNO = srcEMPNO,",
+				"          finalNAME = srcNAME,",
+				"          finalDESG = srcDESG,",
+				"          finalSAL = srcSALARY,",
+				"          finalENDDATE = trgENDDATE,",
+				"          finalISACTIVE = trgISACTIVE",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select2",
+				"select2 alterRow(insertIf(true())) ~> alterRow2",
+				"alterRow1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     deletable:false,",
+				"     insertable:false,",
+				"     updateable:true,",
+				"     upsertable:false,",
+				"     keys:['EMPNO'],",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     mapColumn(",
+				"          EMPNO = trgEMPNO,",
+				"          NAME = trgNAME,",
+				"          DESG = trgDESG,",
+				"          SAL = trgSAL,",
+				"          STARTDATE = trgSTARTDATE,",
+				"          ENDDATE = trgENDDATE,",
+				"          ISACTIVE = trgISACTIVE",
+				"     )) ~> sink1",
+				"alterRow2 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     mapColumn(",
+				"          EMPNO = finalEMPNO,",
+				"          NAME = finalNAME,",
+				"          DESG = finalDESG,",
+				"          SAL = finalSAL,",
+				"          ENDDATE = finalENDDATE,",
+				"          ISACTIVE = finalISACTIVE",
+				"     )) ~> sink2"
 			]
 		}
 	}
