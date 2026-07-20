@@ -1,0 +1,16 @@
+{
+	"name": "ds_src_sql_10",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_src_sql_10",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "OLTEMP"
+		}
+	}
+}
