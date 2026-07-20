@@ -35,6 +35,9 @@
 				},
 				{
 					"name": "filter1UpdateHistory"
+				},
+				{
+					"name": "derivedColumn1"
 				}
 			],
 			"scriptLines": [
@@ -88,7 +91,9 @@
 				"     ignoreSpaces: false,",
 				"     broadcast: 'auto')~> Joinsrctrg10",
 				"Joinsrctrg10 filter(isNull(trgEMPNO) || (srcNAME!=trgNAME || srcDESG!=trgDESG || srcSALARY!=trgSAL)) ~> filter2updatewithinsert",
-				"Joinsrctrg10 filter((srcEMPNO==trgEMPNO) && (srcNAME!=trgNAME || srcDESG!=trgDESG || srcSALARY!=trgSAL)) ~> filter1UpdateHistory"
+				"Joinsrctrg10 filter((srcEMPNO==trgEMPNO) && (srcNAME!=trgNAME || srcDESG!=trgDESG || srcSALARY!=trgSAL)) ~> filter1UpdateHistory",
+				"filter1UpdateHistory derive(trgISACTIVE = 0,",
+				"          trgENDDATE = toDate('31-12-9999', 'dd-MM-yyyy', 'en')) ~> derivedColumn1"
 			]
 		}
 	}
