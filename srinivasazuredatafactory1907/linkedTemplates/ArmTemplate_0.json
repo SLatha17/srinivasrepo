@@ -1,0 +1,708 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "srinivasazuredatafactory1907"
+		},
+		"ls_DimCustomer_09_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'ls_DimCustomer_09'"
+		},
+		"ls_sql_09_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'ls_sql_09'"
+		},
+		"ls_src_sql_10_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'ls_src_sql_10'"
+		},
+		"ls_DimCustomer_09_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "adminlatha.database.windows.net"
+		},
+		"ls_DimCustomer_09_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "SCDType"
+		},
+		"ls_DimCustomer_09_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "Srlatha"
+		},
+		"ls_sql_09_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "adminlatha.database.windows.net"
+		},
+		"ls_sql_09_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "SCDType"
+		},
+		"ls_sql_09_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "Srlatha"
+		},
+		"ls_src_sql_10_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "adminlatha.database.windows.net"
+		},
+		"ls_src_sql_10_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "SCDType"
+		},
+		"ls_src_sql_10_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "Srlatha"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/pipeline1')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Wait1",
+						"type": "Wait",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"waitTimeInSeconds": 1
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ls_DimCustomer_09')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "SqlServer",
+				"typeProperties": {
+					"server": "[parameters('ls_DimCustomer_09_properties_typeProperties_server')]",
+					"database": "[parameters('ls_DimCustomer_09_properties_typeProperties_database')]",
+					"encrypt": "mandatory",
+					"trustServerCertificate": true,
+					"authenticationType": "SQL",
+					"userName": "[parameters('ls_DimCustomer_09_properties_typeProperties_userName')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('ls_DimCustomer_09_password')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ls_sql_09')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "SqlServer",
+				"typeProperties": {
+					"server": "[parameters('ls_sql_09_properties_typeProperties_server')]",
+					"database": "[parameters('ls_sql_09_properties_typeProperties_database')]",
+					"encrypt": "mandatory",
+					"trustServerCertificate": true,
+					"authenticationType": "SQL",
+					"userName": "[parameters('ls_sql_09_properties_typeProperties_userName')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('ls_sql_09_password')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ls_src_sql_10')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "SqlServer",
+				"typeProperties": {
+					"server": "[parameters('ls_src_sql_10_properties_typeProperties_server')]",
+					"database": "[parameters('ls_src_sql_10_properties_typeProperties_database')]",
+					"encrypt": "mandatory",
+					"trustServerCertificate": true,
+					"authenticationType": "SQL",
+					"userName": "[parameters('ls_src_sql_10_properties_typeProperties_userName')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('ls_src_sql_10_password')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_DimCustomer_Target_09')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_sql_09",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "DIMEMP"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ls_sql_09')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_sourcesql_09')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_DimCustomer_09",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"schema": [
+					{
+						"name": "EMPNO",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "NAME",
+						"type": "varchar"
+					},
+					{
+						"name": "DESG",
+						"type": "varchar"
+					},
+					{
+						"name": "SALARY",
+						"type": "int",
+						"precision": 10
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "OLTEMP"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ls_DimCustomer_09')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_src_sql_10')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_src_sql_10",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "OLTEMP"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ls_src_sql_10')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/df_scdType2_09')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "ds_sourcesql_09",
+								"type": "DatasetReference"
+							},
+							"name": "srcsql1"
+						},
+						{
+							"dataset": {
+								"referenceName": "ds_DimCustomer_Target_09",
+								"type": "DatasetReference"
+							},
+							"name": "srcDimCustomerTarget"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "ds_DimCustomer_Target_09",
+								"type": "DatasetReference"
+							},
+							"name": "sink1Update"
+						},
+						{
+							"dataset": {
+								"referenceName": "ds_DimCustomer_Target_09",
+								"type": "DatasetReference"
+							},
+							"name": "sink2Insert"
+						}
+					],
+					"transformations": [
+						{
+							"name": "srcSelectColumnsRename"
+						},
+						{
+							"name": "join1"
+						},
+						{
+							"name": "InsertForNewandHistory"
+						},
+						{
+							"name": "derivedColumnsForInsertandHistory"
+						},
+						{
+							"name": "select1"
+						},
+						{
+							"name": "Update"
+						},
+						{
+							"name": "derivedColumn1"
+						},
+						{
+							"name": "alterRow1"
+						},
+						{
+							"name": "alterRow2"
+						},
+						{
+							"name": "select2"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          EMPNO as integer,",
+						"          NAME as string,",
+						"          DESG as string,",
+						"          SALARY as integer",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     isolationLevel: 'READ_UNCOMMITTED',",
+						"     format: 'table') ~> srcsql1",
+						"source(output(",
+						"          ESK as integer,",
+						"          EMPNO as integer,",
+						"          NAME as string,",
+						"          DESG as string,",
+						"          SAL as integer,",
+						"          STARTDATE as timestamp,",
+						"          ENDDATE as timestamp,",
+						"          ISACTIVE as integer",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     isolationLevel: 'READ_UNCOMMITTED',",
+						"     query: 'select * from dimemp WHERE isnull(ISACTIVE,0)=1',",
+						"     format: 'query') ~> srcDimCustomerTarget",
+						"srcsql1 select(mapColumn(",
+						"          src_EmpNo = EMPNO,",
+						"          src_Name = NAME,",
+						"          src_Desg = DESG,",
+						"          src_Salary = SALARY",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> srcSelectColumnsRename",
+						"srcSelectColumnsRename, srcDimCustomerTarget join(src_EmpNo == EMPNO,",
+						"     joinType:'left',",
+						"     matchType:'exact',",
+						"     ignoreSpaces: false,",
+						"     broadcast: 'auto')~> join1",
+						"join1 filter(isNull(EMPNO) || (src_Name!=NAME)|| (src_Desg!=DESG) ||  (src_Salary!=SAL)) ~> InsertForNewandHistory",
+						"InsertForNewandHistory derive(srcENDDATE = toDate('31-12-9999', 'dd-MM-yyyy', 'en'),",
+						"          srcISACTIVE = 1) ~> derivedColumnsForInsertandHistory",
+						"derivedColumnsForInsertandHistory select(mapColumn(",
+						"          trgEMPNO = src_EmpNo,",
+						"          trgNAME = src_Name,",
+						"          trgDESG = src_Desg,",
+						"          trgSAL = src_Salary,",
+						"          trgENDDATE = srcENDDATE,",
+						"          trgISACTIVE = srcISACTIVE",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> select1",
+						"join1 filter(!isNull(EMPNO) && (src_Name!=NAME || src_Desg!=DESG || src_Salary!=SAL)) ~> Update",
+						"Update derive(trgISACTIVE = 0,",
+						"          trgENDDATE = currentTimestamp()) ~> derivedColumn1",
+						"select2 alterRow(updateIf(true())) ~> alterRow1",
+						"select1 alterRow(insertIf(true())) ~> alterRow2",
+						"derivedColumn1 select(mapColumn(",
+						"          trgEMPNO = src_EmpNo,",
+						"          trgNAME = src_Name,",
+						"          trgDESG = src_Desg,",
+						"          trgSAL = src_Salary,",
+						"          trgENDDATE,",
+						"          trgISACTIVE",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> select2",
+						"alterRow1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     deletable:false,",
+						"     insertable:false,",
+						"     updateable:true,",
+						"     upsertable:false,",
+						"     keys:['EMPNO'],",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     mapColumn(",
+						"          EMPNO = trgEMPNO,",
+						"          NAME = trgNAME,",
+						"          DESG = trgDESG,",
+						"          SAL = trgSAL,",
+						"          ENDDATE = trgENDDATE,",
+						"          ISACTIVE = trgISACTIVE",
+						"     )) ~> sink1Update",
+						"alterRow2 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     mapColumn(",
+						"          EMPNO = trgEMPNO,",
+						"          NAME = trgNAME,",
+						"          DESG = trgDESG,",
+						"          SAL = trgSAL,",
+						"          ENDDATE = trgENDDATE,",
+						"          ISACTIVE = trgISACTIVE",
+						"     )) ~> sink2Insert"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/ds_sourcesql_09')]",
+				"[concat(variables('factoryId'), '/datasets/ds_DimCustomer_Target_09')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/df_scdType2_10')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "ds_src_sql_10",
+								"type": "DatasetReference"
+							},
+							"name": "srcsqltable10"
+						},
+						{
+							"dataset": {
+								"referenceName": "ds_DimCustomer_Target_09",
+								"type": "DatasetReference"
+							},
+							"name": "trgsqltable10"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "ds_DimCustomer_Target_09",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						},
+						{
+							"dataset": {
+								"referenceName": "ds_DimCustomer_Target_09",
+								"type": "DatasetReference"
+							},
+							"name": "sink2"
+						}
+					],
+					"transformations": [
+						{
+							"name": "select1src"
+						},
+						{
+							"name": "select2trg"
+						},
+						{
+							"name": "Joinsrctrg10"
+						},
+						{
+							"name": "filter2updatewithinsert"
+						},
+						{
+							"name": "filter1UpdateHistory"
+						},
+						{
+							"name": "derivedColumn1"
+						},
+						{
+							"name": "alterRow1"
+						},
+						{
+							"name": "select1"
+						},
+						{
+							"name": "derivedColumn2"
+						},
+						{
+							"name": "select2"
+						},
+						{
+							"name": "alterRow2"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          EMPNO as integer,",
+						"          NAME as string,",
+						"          DESG as string,",
+						"          SALARY as integer",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     isolationLevel: 'READ_UNCOMMITTED',",
+						"     format: 'table') ~> srcsqltable10",
+						"source(output(",
+						"          ESK as integer,",
+						"          EMPNO as integer,",
+						"          NAME as string,",
+						"          DESG as string,",
+						"          SAL as integer,",
+						"          STARTDATE as timestamp,",
+						"          ENDDATE as timestamp,",
+						"          ISACTIVE as integer",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     isolationLevel: 'READ_UNCOMMITTED',",
+						"     format: 'table') ~> trgsqltable10",
+						"srcsqltable10 select(mapColumn(",
+						"          srcEMPNO = EMPNO,",
+						"          srcNAME = NAME,",
+						"          srcDESG = DESG,",
+						"          srcSALARY = SALARY",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> select1src",
+						"trgsqltable10 select(mapColumn(",
+						"          trgESK = ESK,",
+						"          trgEMPNO = EMPNO,",
+						"          trgNAME = NAME,",
+						"          trgDESG = DESG,",
+						"          trgSAL = SAL,",
+						"          trgSTARTDATE = STARTDATE,",
+						"          trgENDDATE = ENDDATE,",
+						"          trgISACTIVE = ISACTIVE",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> select2trg",
+						"select1src, select2trg join(srcEMPNO == trgEMPNO,",
+						"     joinType:'left',",
+						"     matchType:'exact',",
+						"     ignoreSpaces: false,",
+						"     broadcast: 'auto')~> Joinsrctrg10",
+						"Joinsrctrg10 filter(isNull(trgEMPNO) || (srcNAME!=trgNAME || srcDESG!=trgDESG || srcSALARY!=trgSAL)) ~> filter2updatewithinsert",
+						"Joinsrctrg10 filter((srcEMPNO==trgEMPNO) && (srcNAME!=trgNAME || srcDESG!=trgDESG || srcSALARY!=trgSAL)) ~> filter1UpdateHistory",
+						"filter1UpdateHistory derive(trgISACTIVE = 0,",
+						"          trgENDDATE = currentTimestamp()) ~> derivedColumn1",
+						"select1 alterRow(updateIf(true())) ~> alterRow1",
+						"derivedColumn1 select(mapColumn(",
+						"          trgEMPNO,",
+						"          trgNAME,",
+						"          trgDESG,",
+						"          trgSAL,",
+						"          trgENDDATE,",
+						"          trgISACTIVE",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> select1",
+						"filter2updatewithinsert derive(trgISACTIVE = 1,",
+						"          trgENDDATE = toDate('31-12-9999', 'dd-MM-yyyy', 'en')) ~> derivedColumn2",
+						"derivedColumn2 select(mapColumn(",
+						"          finalEMPNO = srcEMPNO,",
+						"          finalNAME = srcNAME,",
+						"          finalDESG = srcDESG,",
+						"          finalSAL = srcSALARY,",
+						"          finalENDDATE = trgENDDATE,",
+						"          finalISACTIVE = trgISACTIVE",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> select2",
+						"select2 alterRow(insertIf(true())) ~> alterRow2",
+						"alterRow1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     deletable:false,",
+						"     insertable:false,",
+						"     updateable:true,",
+						"     upsertable:false,",
+						"     keys:['EMPNO'],",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     mapColumn(",
+						"          EMPNO = trgEMPNO,",
+						"          NAME = trgNAME,",
+						"          DESG = trgDESG,",
+						"          SAL = trgSAL,",
+						"          ENDDATE = trgENDDATE,",
+						"          ISACTIVE = trgISACTIVE",
+						"     )) ~> sink1",
+						"alterRow2 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     mapColumn(",
+						"          EMPNO = finalEMPNO,",
+						"          NAME = finalNAME,",
+						"          DESG = finalDESG,",
+						"          SAL = finalSAL,",
+						"          ENDDATE = finalENDDATE,",
+						"          ISACTIVE = finalISACTIVE",
+						"     )) ~> sink2"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/ds_src_sql_10')]",
+				"[concat(variables('factoryId'), '/datasets/ds_DimCustomer_Target_09')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pl_scdType2_09')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "df_scdType2_09",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "df_scdType2_09",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"srcsql1": {},
+									"srcDimCustomerTarget": {},
+									"sink1Update": {},
+									"sink2Insert": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"annotations": [],
+				"lastPublishTime": "2026-07-20T07:37:44Z"
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/df_scdType2_09')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pl_scdType2_10')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "df_scdtype2_10",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "df_scdType2_10",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"srcsqltable10": {},
+									"trgsqltable10": {},
+									"sink1": {},
+									"sink2": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/df_scdType2_10')]"
+			]
+		}
+	]
+}

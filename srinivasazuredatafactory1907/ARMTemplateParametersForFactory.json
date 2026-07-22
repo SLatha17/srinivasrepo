@@ -1,0 +1,45 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "srinivasazuredatafactory1907"
+		},
+		"ls_DimCustomer_09_password": {
+			"value": ""
+		},
+		"ls_sql_09_password": {
+			"value": ""
+		},
+		"ls_src_sql_10_password": {
+			"value": ""
+		},
+		"ls_DimCustomer_09_properties_typeProperties_server": {
+			"value": "adminlatha.database.windows.net"
+		},
+		"ls_DimCustomer_09_properties_typeProperties_database": {
+			"value": "SCDType"
+		},
+		"ls_DimCustomer_09_properties_typeProperties_userName": {
+			"value": "Srlatha"
+		},
+		"ls_sql_09_properties_typeProperties_server": {
+			"value": "adminlatha.database.windows.net"
+		},
+		"ls_sql_09_properties_typeProperties_database": {
+			"value": "SCDType"
+		},
+		"ls_sql_09_properties_typeProperties_userName": {
+			"value": "Srlatha"
+		},
+		"ls_src_sql_10_properties_typeProperties_server": {
+			"value": "adminlatha.database.windows.net"
+		},
+		"ls_src_sql_10_properties_typeProperties_database": {
+			"value": "SCDType"
+		},
+		"ls_src_sql_10_properties_typeProperties_userName": {
+			"value": "Srlatha"
+		}
+	}
+}
