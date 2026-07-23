@@ -1,0 +1,16 @@
+{
+	"name": "ds_destsql_fromcsv_12",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_destsql_fromcsv_12",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "Emp"
+		}
+	}
+}
