@@ -5,13 +5,13 @@
 		"annotations": [],
 		"type": "SqlServer",
 		"typeProperties": {
-			"server": "azuresqldwhsrini.database.windows.net",
+			"server": "adminlatha.database.windows.net",
 			"database": "TechbrothersIT",
 			"encrypt": "mandatory",
 			"trustServerCertificate": true,
 			"authenticationType": "SQL",
 			"userName": "Srlatha",
-			"encryptedCredential": "ew0KICAiVmVyc2lvbiI6ICIyMDE3LTExLTMwIiwNCiAgIlByb3RlY3Rpb25Nb2RlIjogIktleSIsDQogICJTZWNyZXRDb250ZW50VHlwZSI6ICJQbGFpbnRleHQiLA0KICAiQ3JlZGVudGlhbElkIjogIkRBVEFGQUNUT1JZQEIwMkEyNzExLUUzRDMtNEEzNi1CRTlGLUFENkFBRDk1RTc3NV9jNDUyNmY1MS02M2UwLTQyZTYtOTAwNi1kZGNmNzY1ZmJkYWYiDQp9"
+			"encryptedCredential": "ew0KICAiVmVyc2lvbiI6ICIyMDE3LTExLTMwIiwNCiAgIlByb3RlY3Rpb25Nb2RlIjogIktleSIsDQogICJTZWNyZXRDb250ZW50VHlwZSI6ICJQbGFpbnRleHQiLA0KICAiQ3JlZGVudGlhbElkIjogIkRBVEFGQUNUT1JZQEIwMkEyNzExLUUzRDMtNEEzNi1CRTlGLUFENkFBRDk1RTc3NV9lMzMyOWUwZS1kMzhkLTQ0MmYtYTg1Zi02NmU4ZjU4MDU4ODIiDQp9"
 		}
 	}
 }
