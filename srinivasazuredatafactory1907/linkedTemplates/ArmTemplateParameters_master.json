@@ -8,6 +8,9 @@
 		"ls_DimCustomer_09_password": {
 			"value": ""
 		},
+		"ls_adls_10_accountKey": {
+			"value": ""
+		},
 		"ls_sql_09_password": {
 			"value": ""
 		},
@@ -22,6 +25,9 @@
 		},
 		"ls_DimCustomer_09_properties_typeProperties_userName": {
 			"value": "Srlatha"
+		},
+		"ls_adls_10_properties_typeProperties_url": {
+			"value": "https://slathaadlsstorageaccount.dfs.core.windows.net/"
 		},
 		"ls_sql_09_properties_typeProperties_server": {
 			"value": "adminlatha.database.windows.net"
