@@ -145,6 +145,13 @@
 						"referenceName": "ds_sourcefiles_11",
 						"type": "DatasetReference"
 					},
+					"logStorageSettings": {
+						"linkedServiceName": {
+							"referenceName": "ls_logging_all",
+							"type": "LinkedServiceReference"
+						},
+						"path": "logging"
+					},
 					"enableLogging": true,
 					"storeSettings": {
 						"type": "AzureBlobFSReadSettings",
