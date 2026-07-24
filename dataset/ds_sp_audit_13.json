@@ -2,7 +2,7 @@
 	"name": "ds_sp_audit_13",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "ds_sink_customer",
+			"referenceName": "ls_sql_13",
 			"type": "LinkedServiceReference"
 		},
 		"annotations": [],
