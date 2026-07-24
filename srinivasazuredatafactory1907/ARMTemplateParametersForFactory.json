@@ -11,6 +11,12 @@
 		"ls_adls_10_accountKey": {
 			"value": ""
 		},
+		"ls_destsql_fromcsv_12_password": {
+			"value": ""
+		},
+		"ls_logging_all_connectionString": {
+			"value": ""
+		},
 		"ls_sql_09_password": {
 			"value": ""
 		},
@@ -28,6 +34,15 @@
 		},
 		"ls_adls_10_properties_typeProperties_url": {
 			"value": "https://slathaadlsstorageaccount.dfs.core.windows.net/"
+		},
+		"ls_destsql_fromcsv_12_properties_typeProperties_server": {
+			"value": "adminlatha.database.windows.net"
+		},
+		"ls_destsql_fromcsv_12_properties_typeProperties_database": {
+			"value": "TechbrothersIT"
+		},
+		"ls_destsql_fromcsv_12_properties_typeProperties_userName": {
+			"value": "Srlatha"
 		},
 		"ls_sql_09_properties_typeProperties_server": {
 			"value": "adminlatha.database.windows.net"
