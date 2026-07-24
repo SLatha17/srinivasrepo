@@ -77,25 +77,19 @@
 					"storedProcedureName": "[dbo].[usp_LogLoad]",
 					"storedProcedureParameters": {
 						"FileName": {
-							"value": "dbo.DimCustomer",
+							"value": "@activity('Copy customers').output.executionDetails[0].source.fileName",
 							"type": "String"
 						},
 						"RowsLoaded": {
-							"value": {
-								"value": "@activity('plcopywithsp13').output.executionDetails[0].source.fileName",
-								"type": "Expression"
-							},
+							"value": "@activity('Copy customers').output.rowsCopied",
 							"type": "Int32"
 						},
 						"Status": {
-							"value": {
-								"value": "@activity('plcopywithsp13').output.rowscopied",
-								"type": "Expression"
-							},
+							"value": "'Success'",
 							"type": "String"
 						},
 						"TableName": {
-							"value": "'Success'",
+							"value": "dbo.DimCustomer",
 							"type": "String"
 						}
 					}
@@ -106,6 +100,20 @@
 				}
 			}
 		],
+		"parameters": {
+			"TableName": {
+				"type": "string"
+			},
+			"FileName": {
+				"type": "string"
+			},
+			"RowsLoaded": {
+				"type": "string"
+			},
+			"Status": {
+				"type": "string"
+			}
+		},
 		"annotations": []
 	}
 }
