@@ -26,11 +26,30 @@
 							"type": "DelimitedTextReadSettings"
 						}
 					},
-					"enableStaging": false
+					"sink": {
+						"type": "SqlServerSink",
+						"writeBehavior": "insert",
+						"sqlWriterUseTableLock": false
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
 				},
 				"inputs": [
 					{
 						"referenceName": "ds_source_csv_13",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "ds_sink_customer_13",
 						"type": "DatasetReference"
 					}
 				]
@@ -54,8 +73,35 @@
 					"secureInput": false
 				},
 				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[usp_LogLoad]",
+					"storedProcedureParameters": {
+						"FileName": {
+							"value": "dbo.DimCustomer",
+							"type": "String"
+						},
+						"RowsLoaded": {
+							"value": {
+								"value": "@activity('plcopywithsp13').output.executionDetails[0].source.fileName",
+								"type": "Expression"
+							},
+							"type": "Int32"
+						},
+						"Status": {
+							"value": {
+								"value": "@activity('plcopywithsp13').output.rowscopied",
+								"type": "Expression"
+							},
+							"type": "String"
+						},
+						"TableName": {
+							"value": "'Success'",
+							"type": "String"
+						}
+					}
+				},
 				"linkedServiceName": {
-					"referenceName": "ds_sink_customer",
+					"referenceName": "ls_sql_13",
 					"type": "LinkedServiceReference"
 				}
 			}
