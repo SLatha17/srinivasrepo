@@ -100,20 +100,6 @@
 				}
 			}
 		],
-		"parameters": {
-			"TableName": {
-				"type": "string"
-			},
-			"FileName": {
-				"type": "string"
-			},
-			"RowsLoaded": {
-				"type": "string"
-			},
-			"Status": {
-				"type": "string"
-			}
-		},
 		"annotations": []
 	}
 }
