@@ -1,0 +1,34 @@
+{
+	"name": "ds_sql_sink_14",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_sql_region_14",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [
+			{
+				"name": "CustomerId",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "FName",
+				"type": "varchar"
+			},
+			{
+				"name": "LName",
+				"type": "varchar"
+			},
+			{
+				"name": "Region",
+				"type": "varchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "Customer_Dest"
+		}
+	}
+}
