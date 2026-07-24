@@ -1,0 +1,16 @@
+{
+	"name": "ds_sink_customer_13",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ds_sink_customer",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "DimCustomer"
+		}
+	}
+}
