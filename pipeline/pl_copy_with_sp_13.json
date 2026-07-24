@@ -77,11 +77,17 @@
 					"storedProcedureName": "[dbo].[usp_LogLoad]",
 					"storedProcedureParameters": {
 						"FileName": {
-							"value": "@activity('Copy customers').output.executionDetails[0].source.fileName",
+							"value": {
+								"value": "@activity('plcopywithsp13').output.executionDetails[0].source.fileName",
+								"type": "Expression"
+							},
 							"type": "String"
 						},
 						"RowsLoaded": {
-							"value": "@activity('Copy customers').output.rowsCopied",
+							"value": {
+								"value": "@activity('plcopywithsp13').output.rowsCopied",
+								"type": "Expression"
+							},
 							"type": "Int32"
 						},
 						"Status": {
