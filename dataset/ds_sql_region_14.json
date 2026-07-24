@@ -1,0 +1,26 @@
+{
+	"name": "ds_sql_region_14",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_sql_region_14",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [
+			{
+				"name": "RegionId",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "Region",
+				"type": "varchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "Region"
+		}
+	}
+}
